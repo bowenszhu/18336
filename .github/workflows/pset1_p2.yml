@@ -1,0 +1,42 @@
+name: run-pset1
+on: push
+
+jobs:
+  run-timing:
+    runs-on: ubuntu-latest 
+    steps:
+      - uses: actions/checkout@v3
+      - uses: julia-actions/setup-julia@latest
+        with:
+          version: '1'
+      - uses: julia-actions/julia-buildpkg@v1
+      - name: Run pset1 problem2
+        run: julia --project src/pset1/problem2.jl
+      - uses: actions/upload-artifact@v3
+        with:
+          name: m1-plot
+          path: time_m1.png
+      - uses: actions/upload-artifact@v3
+        with:
+          name: m100-plot
+          path: time_m100.png
+  comment-plot:
+    needs: run-timing
+    runs-on: ubuntu-latest
+    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: m1-plot
+      - uses: actions/download-artifact@v3
+        with:
+          name: m100-plot
+      - name: Add plot to comment
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cml-publish time_m1.png --md >> report.md
+          cml-publish time_m100.png --md >> report.md
+          cml-send-comment report.md
+            
