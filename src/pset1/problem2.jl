@@ -127,7 +127,7 @@ my_FFT_time = similar(Ns, Float64)
 for (i, N) in enumerate(Ns)
     println(i, " ", N)
     local x = rand(ComplexF64, N, M)
-    my_FFT_time[i] = @belapsed apply_DFT($x)
+    my_FFT_time[i] = @belapsed apply_FFT($x)
 end
 plot!(plt_m100, Ns, my_FFT_time, label = "my FFT", markershape = :diamond)
 
@@ -173,18 +173,18 @@ M = 1
 for (i, N) in enumerate(Ns)
     println(i, " ", N)
     local x = rand(ComplexF64, N, M)
-    my_FFT_cached_DFT_time[i] = @belapsed apply_FFT($x)
+    my_FFT_cached_DFT_time[i] = @belapsed apply_FFT_with_cached_DFT($x)
 end
 plot!(plt_m1, Ns, my_FFT_cached_DFT_time, label = "my FFT with cached DFT",
       markershape = :hexagon)
 
 M = 100
 Ns = 1 .<< (1:10)
-my_FFT_time = similar(Ns, Float64)
+my_FFT_cached_DFT_time = similar(Ns, Float64)
 for (i, N) in enumerate(Ns)
     println(i, " ", N)
     local x = rand(ComplexF64, N, M)
-    my_FFT_time[i] = @belapsed apply_DFT($x)
+    my_FFT_cached_DFT_time[i] = @belapsed apply_FFT_with_cached_DFT($x)
 end
 plot!(plt_m100, Ns, my_FFT_cached_DFT_time, label = "my FFT with cached DFT",
       markershape = :hexagon)
