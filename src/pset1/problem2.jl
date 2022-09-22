@@ -132,11 +132,15 @@ end
 plot!(plt_m100, Ns, my_FFT_time, label = "my FFT", markershape = :diamond)
 
 function apply_FFT_with_cached_DFT(x::AbstractMatrix)
+    if N == 1
+        return convert.(ComplexF64, x)
+    end
+    if N < 129 # 2⁷
+        i = trailing_zeros(N)
+        return DFT_cache[i] * x
+    end
     x = convert.(ComplexF64, x)
     N = size(x, 1)
-    if N == 1
-        return x
-    end
     y = similar(x)
     ωₙ = cispi.(range(0; step = -2 / N, length = N >> 1))
     apply_FFT_with_cached_DFT!(y, x, ωₙ, N)
