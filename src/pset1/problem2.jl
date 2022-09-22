@@ -54,7 +54,7 @@ end
 plot!(plt_m1, Ns, cached_DFT_time, label = "cached DFT", markershape = :star5)
 
 M = 100
-NₘₐₓM₁₀₀ = 10
+NₘₐₓM₁₀₀ = 13
 Ns = 1 .<< (1:NₘₐₓM₁₀₀)
 DFT_time = similar(Ns, Float64)
 cached_DFT_time = similar(DFT_time)
