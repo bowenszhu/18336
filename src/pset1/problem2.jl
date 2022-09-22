@@ -20,7 +20,8 @@ fftw = fft(x)
 diff = mine - fftw
 norm(diff)
 
-Ns = 1 .<< (1:10)
+Nₘₐₓ = 10
+Ns = 1 .<< (1:Nₘₐₓ)
 DFT_time = similar(Ns, Float64)
 FFT_time = similar(DFT_time)
 M = 1
@@ -53,7 +54,7 @@ end
 plot!(plt_m1, Ns, cached_DFT_time, label = "cached DFT", markershape = :star5)
 
 M = 100
-Ns = 1 .<< (1:10)
+Ns = 1 .<< (1:Nₘₐₓ)
 DFT_time = similar(Ns, Float64)
 cached_DFT_time = similar(DFT_time)
 FFT_time = similar(DFT_time)
@@ -111,7 +112,7 @@ fftw = fft(x)
 diff = mine - fftw
 norm(diff)
 
-Ns = 1 .<< (1:10)
+Ns = 1 .<< (1:Nₘₐₓ)
 my_FFT_time = similar(Ns, Float64)
 M = 1
 for (i, N) in enumerate(Ns)
@@ -122,7 +123,7 @@ end
 plot!(plt_m1, Ns, my_FFT_time, label = "my FFT", markershape = :diamond)
 
 M = 100
-Ns = 1 .<< (1:10)
+Ns = 1 .<< (1:Nₘₐₓ)
 my_FFT_time = similar(Ns, Float64)
 for (i, N) in enumerate(Ns)
     println(i, " ", N)
@@ -171,7 +172,7 @@ function apply_FFT_with_cached_DFT!(y::AbstractMatrix{ComplexF64},
     nothing
 end
 
-Ns = 1 .<< (1:10)
+Ns = 1 .<< (1:Nₘₐₓ)
 my_FFT_cached_DFT_time = similar(Ns, Float64)
 M = 1
 for (i, N) in enumerate(Ns)
@@ -183,7 +184,7 @@ plot!(plt_m1, Ns, my_FFT_cached_DFT_time, label = "my FFT with cached DFT",
       markershape = :hexagon)
 
 M = 100
-Ns = 1 .<< (1:10)
+Ns = 1 .<< (1:Nₘₐₓ)
 my_FFT_cached_DFT_time = similar(Ns, Float64)
 for (i, N) in enumerate(Ns)
     println(i, " ", N)
