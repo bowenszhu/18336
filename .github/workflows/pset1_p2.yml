@@ -11,7 +11,7 @@ jobs:
           version: '1.8.1'
       - uses: julia-actions/julia-buildpkg@v1
       - name: Run pset1 problem2
-        run: julia --project src/pset1/problem2.jl
+        run: xvfb-run julia --project src/pset1/problem2.jl
       - uses: actions/upload-artifact@v3
         with:
           name: m1-plot
