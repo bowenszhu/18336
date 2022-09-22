@@ -79,7 +79,8 @@ function apply_FFT(x::AbstractMatrix)
     apply_FFT!(y, x, ωₙ, N)
     return y
 end
-function apply_FFT!(y::AbstractMatrix, x::AbstractMatrix, ωₙ::AbstractVector, N::Integer)
+function apply_FFT!(y::AbstractMatrix{ComplexF64}, x::AbstractMatrix{ComplexF64},
+                    ωₙ::AbstractVector{ComplexF64}, N::Integer)
     if N == 1
         y .= x
         return
