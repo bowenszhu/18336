@@ -3,7 +3,9 @@ on: push
 
 jobs:
   run-timing:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
+    env:
+      GKSwstype: "100"
     steps:
       - uses: actions/checkout@v3
       - uses: julia-actions/setup-julia@latest
