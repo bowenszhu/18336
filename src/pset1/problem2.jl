@@ -20,7 +20,7 @@ fftw = fft(x)
 diff = mine - fftw
 norm(diff)
 
-NₘₐₓM₁ = 10
+NₘₐₓM₁ = 13
 Ns = 1 .<< (1:NₘₐₓM₁)
 DFT_time = similar(Ns, Float64)
 FFT_time = similar(DFT_time)
