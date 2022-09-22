@@ -31,7 +31,8 @@ for (i, N) in enumerate(Ns)
     FFT_time[i] = @belapsed fft($x)
 end
 plt_m1 = plot(Ns, DFT_time, label = "DFT", xlabel = "N", ylabel = "time [sec]",
-              axis = :log10, minorgrid = true, markershape = :circle, title = "M = $M")
+              axis = :log10, minorgrid = true, markershape = :circle, title = "M = $M",
+              legend = :topleft)
 plot!(plt_m1, Ns, FFT_time, label = "FFT", markershape = :circle)
 
 DFT_cache = map(DFT_matrix, Ns)
@@ -64,7 +65,8 @@ for (i, N) in enumerate(Ns)
     FFT_time[i] = @belapsed fft($x)
 end
 plt_m100 = plot(Ns, DFT_time, label = "DFT", xlabel = "N", ylabel = "time [sec]",
-                axis = :log10, minorgrid = true, markershape = :circle, title = "M = $M")
+                axis = :log10, minorgrid = true, markershape = :circle, title = "M = $M",
+                legend = :topleft)
 plot!(plt_m100, Ns, FFT_time, label = "FFT", markershape = :circle)
 plot!(plt_m100, Ns, cached_DFT_time, label = "DFT cached", markershape = :circle)
 
