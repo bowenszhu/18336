@@ -35,10 +35,7 @@ helmholtz_op(8, 21.3e6)
 Σ = ScalMat(2, σ²)
 d = MvNormal(μ, Σ) # Gaussian impulse
 function v_op(xs::AbstractVector, ys::AbstractVector)
-    grid = Array{Float64}(undef, 2, length(xs), length(ys))
-    grid[1, :, :] .= xs
-    grid[2, :, :] .= ys'
-    density = pdf(d, grid)
+    density = [pdf(d, [x, y]) for x in xs, y in ys]
     vec(density)
 end
 N = 256
