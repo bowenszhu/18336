@@ -102,7 +102,7 @@ function dst_precondition(N::Integer, F::AbstractMatrix)
     UF ./= (2N)^2 # normalize
     UF
 end
-Ns = 1 .<< (4:15)
+Ns = 1 .<< (4:11)
 sp_time = similar(Ns, Float64)
 dst_time = similar(sp_time)
 for (i, N) in enumerate(Ns)
