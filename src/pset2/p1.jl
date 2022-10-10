@@ -107,8 +107,8 @@ sp_time = similar(Ns, Float64)
 dst_time = similar(sp_time)
 for (i, N) in enumerate(Ns)
     local F = setup_rhs(N)
-    sp_time[i] = @belapsed sparse_solve(N, F)
-    dst_time[i] = @belapsed dst_precondition(N, F)
+    sp_time[i] = @belapsed sparse_solve($N, $F)
+    dst_time[i] = @belapsed dst_precondition($N, $F)
 end
 plot(Ns, sp_time, axis = :log, xlabel = L"N", ylabel = "time [sec]",
      label = "sparse solve", markershape = :circle, legend = :left)
