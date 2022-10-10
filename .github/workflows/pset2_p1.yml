@@ -25,6 +25,10 @@ jobs:
         with:
           name: p13-plot
           path: p13.svg
+      - uses: actions/upload-artifact@v3
+        with:
+          name: p14-plot
+          path: p14.svg
   comment-plot:
     needs: run-timing
     runs-on: ubuntu-latest
@@ -40,6 +44,9 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: p13-plot
+      - uses: actions/download-artifact@v3
+        with:
+          name: p14-plot
       - name: Add plot to comment
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -47,4 +54,5 @@ jobs:
           cml-publish p121.svg --md >> report.md
           cml-publish p122.svg --md >> report.md
           cml-publish p13.svg --md >> report.md
+          cml-publish p14.svg --md >> report.md
           cml-send-comment report.md
