@@ -111,6 +111,6 @@ for (i, N) in enumerate(Ns)
     dst_time[i] = @belapsed dst_precondition($N, $F)
 end
 plot(Ns, sp_time, axis = :log, xlabel = L"N", ylabel = "time [sec]",
-     label = "sparse solve", markershape = :circle, legend = :left)
+     label = "sparse solve", markershape = :circle, legend = :topleft)
 plot!(Ns, dst_time, label = "DST precondition", markershape = :circle)
 savefig("p14.svg")
