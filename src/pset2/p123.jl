@@ -254,7 +254,7 @@ function iterative_solve(N::Integer, v::AbstractMatrix, f::AbstractFloat)
     u
 end
 iterative_time = @belapsed iterative_solve(256, v, 21.3e6)
-iN = only(find(x -> x == 256, Ns))
+iN = only(findall(x -> x == 256, Ns))
 sp_time = sp_time[iN]
 dst_time = dst_time[iN]
 open("p23.txt", "w") do io
