@@ -107,18 +107,20 @@ jobs:
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo problem 1 >> report.md
-          cml-publish p121.svg --md >> report.md
-          cml-publish p122.svg --md >> report.md
-          cml-publish p13.svg --md >> report.md
-          cml-publish p14.svg --md >> report.md
-          echo problem 2 >> report.md
-          cml-publish p20_real.svg --md >> report.md
-          cml-publish p20_imag.svg --md >> report.md
-          cml-publish p21_1real.svg --md >> report.md
-          cml-publish p21_1imag.svg --md >> report.md
-          cml-publish p21_2real.svg --md >> report.md
-          cml-publish p21_2imag.svg --md >> report.md
-          cml-publish p22_1.svg --md >> report.md
-          cml-publish p22_2.svg --md >> report.md
-          cml-send-comment report.md
+          echo problem 1 >> report1.md
+          cml-publish p121.svg --md >> report1.md
+          cml-publish p122.svg --md >> report1.md
+          cml-publish p13.svg --md >> report1.md
+          cml-publish p14.svg --md >> report1.md
+          cml-send-comment report1.md
+
+          echo problem 2 >> report2.md
+          cml-publish p20_real.svg --md >> report2.md
+          cml-publish p20_imag.svg --md >> report2.md
+          cml-publish p21_1real.svg --md >> report2.md
+          cml-publish p21_1imag.svg --md >> report2.md
+          cml-publish p21_2real.svg --md >> report2.md
+          cml-publish p21_2imag.svg --md >> report2.md
+          cml-publish p22_1.svg --md >> report2.md
+          cml-publish p22_2.svg --md >> report2.md
+          cml-send-comment report2.md
