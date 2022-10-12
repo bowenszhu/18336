@@ -1,0 +1,74 @@
+name: run-pset2-p2
+on: push
+jobs:
+  run-timing:
+    runs-on: ubuntu-latest
+    env:
+      GKSwstype: "100"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: julia-actions/setup-julia@latest
+        with:
+          version: "1.8.2"
+      - uses: julia-actions/julia-buildpkg@v1
+      - name: Run
+        run: julia --project src/pset2/p1.jl
+      - uses: actions/upload-artifact@v3
+        with:
+          name: p20_real-plot
+          path: p20_real.svg
+      - uses: actions/upload-artifact@v3
+        with:
+          name: p20_imag-plot
+          path: p20_imag.svg
+      - uses: actions/upload-artifact@v3
+        with:
+          name: p21_1real-plot
+          path: p21_1real.svg
+      - uses: actions/upload-artifact@v3
+        with:
+          name: p21_1imag-plot
+          path: p21_1imag.svg
+      - uses: actions/upload-artifact@v3
+        with:
+          name: p21_2real-plot
+          path: p21_2real.svg
+      - uses: actions/upload-artifact@v3
+        with:
+          name: p21_2imag-plot
+          path: p21_2imag.svg
+  comment-plot:
+    needs: run-timing
+    runs-on: ubuntu-latest
+    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: p20_real-plot
+      - uses: actions/download-artifact@v3
+        with:
+          name: p20_imag-plot
+      - uses: actions/download-artifact@v3
+        with:
+          name: p21_1real-plot
+      - uses: actions/download-artifact@v3
+        with:
+          name: p21_1imag-plot
+      - uses: actions/download-artifact@v3
+        with:
+          name: p21_2real-plot
+      - uses: actions/download-artifact@v3
+        with:
+          name: p21_2imag-plot
+      - name: Add plot to comment
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cml-publish p20_real.svg --md >> report.md
+          cml-publish p20_imag.svg --md >> report.md
+          cml-publish p21_1real.svg --md >> report.md
+          cml-publish p21_1imag.svg --md >> report.md
+          cml-publish p21_2real.svg --md >> report.md
+          cml-publish p21_2imag.svg --md >> report.md
+          cml-send-comment report.md
