@@ -136,7 +136,7 @@ xs = @view xs[(begin + 1):(end - 1)]
 ys = @view ys[(begin + 1):(end - 1)]
 
 ## Problem 2.1
-const N = 256
+N = 256
 μ = [0.5, 0.5]
 σ² = 0.01^2
 Σ = ScalMat(2, σ²)
@@ -233,3 +233,32 @@ plot(iteration, error₂, yaxis = :log, xlabel = "iteration",
      ylabel = L"||u^{(l)}-\bar u||_\infty/||\bar u||_\infty", marker = :circle,
      legend = false, title = L"f=%$f₂")
 savefig("p22_2.svg")
+
+# Problem 2.3
+function iterative_solve(N::Integer, v::AbstractMatrix, f::AbstractFloat)
+    u = zeros(ComplexF64, N - 1, N - 1)
+    dst! = plan_r2r!(u, RODFT00)
+    ω = 2π * f
+    k₀² = (ω / c₀)^2
+    factor = [k₀² - (λ[i] + λ[j]) / h² for i in 1:(N - 1), j in 1:(N - 1)]
+    k²k₀² = ω^2 * μ₀ * ϵ
+    k²k₀² .-= k₀²
+    normalize = (2N)^2
+    for i in 1:19
+        @. u = v - k²k₀² * u
+        dst! * u
+        u ./= factor
+        dst! * u
+        u ./= normalize
+    end
+    u
+end
+iterative_time = @belapsed iterative_solve(256, v, 21.3e6)
+iN = only(find(x -> x == 256, Ns))
+sp_time = sp_time[iN]
+dst_time = dst_time[iN]
+open("p23.txt", "w") do io
+    write(io, "iterative_time $iterative_time\n")
+    write(io, "sp_time $sp_time\n")
+    write(io, "dst_time $dst_time\n")
+end
