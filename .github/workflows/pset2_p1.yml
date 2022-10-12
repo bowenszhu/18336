@@ -51,6 +51,7 @@ jobs:
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo problem 1 >> report.md
           cml-publish p121.svg --md >> report.md
           cml-publish p122.svg --md >> report.md
           cml-publish p13.svg --md >> report.md

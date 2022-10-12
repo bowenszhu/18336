@@ -12,7 +12,7 @@ jobs:
           version: "1.8.2"
       - uses: julia-actions/julia-buildpkg@v1
       - name: Run
-        run: julia --project src/pset2/p1.jl
+        run: julia --project src/pset2/p2.jl
       - uses: actions/upload-artifact@v3
         with:
           name: p20_real-plot
@@ -65,6 +65,7 @@ jobs:
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo problem 2 >> report.md
           cml-publish p20_real.svg --md >> report.md
           cml-publish p20_imag.svg --md >> report.md
           cml-publish p21_1real.svg --md >> report.md
