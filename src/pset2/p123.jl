@@ -1,5 +1,5 @@
 using FillArrays: Fill, Eye
-using LinearAlgebra: SymTridiagonal, Diagonal
+using LinearAlgebra: SymTridiagonal, Diagonal, norm
 using SparseArrays: sparse, kron
 using Distributions: MvNormal, pdf
 using PDMats: ScalMat
@@ -262,3 +262,6 @@ open("p23.txt", "w") do io
     write(io, "sp_time $sp_time\n")
     write(io, "dst_time $dst_time\n")
 end
+
+# 3 A spectrally accurate free-space direct solver
+## Problem 3.1
