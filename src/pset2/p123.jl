@@ -335,3 +335,16 @@ plot!(Ns, error_dst1_fd, markershape = :diamond, label = "FD DST1")
 savefig("p32.svg")
 
 ## Problem 3.3
+time_spectral = similar(Ns, Float64)
+time_sparse_fd = similar(time_spectral)
+time_dst1_fd = similar(time_spectral)
+for (i, N) in enumerate(Ns)
+    time_spectral[i] = @belapsed spectral($N)
+    time_sparse_fd[i] = @belapsed sparse_solve($N, setup_rhs($N))
+    time_dst1_fd[i] = @belapsed dst_precondition($N, setup_rhs($N))
+end
+plot(time_spectral, error_spectral, axis = :log, xlabel = "run time", marker = :circle,
+     ylabel = "relative error", label = "spectral", legend = :bottomleft)
+plot!(time_sparse_fd, error_sparse_fd, markershape = :square, label = "FD sparse")
+plot!(time_dst1_fd, error_dst1_fd, markershape = :diamond, label = "FD DST1")
+savefig("p33.svg")
