@@ -95,6 +95,7 @@ function sparse_solve(N::Integer, F::AbstractMatrix)
 end
 function dst_precondition(N::Integer, F::AbstractMatrix)
     UF = r2r(F, RODFT00) # F̂
+    h = 1 / N
     λ = cospi.(range(h, 1 - h, N - 1))
     @. λ = 2.0 - 2.0 * λ
     h² = 1 / N^2
@@ -272,12 +273,12 @@ k² = (ω / c₀)^2
 μ = [0.6, 0.7]
 σ² = 0.01^2
 Σ = ScalMat(2, σ²)
-distribution = MvNormal(μ, Σ)
+d = MvNormal(μ, Σ)
 function spectral(N::Integer)
     h = 1 / N
     xs = range(h, 1 - h, N - 1)
     ys = xs
-    uv = [pdf(distribution, [x, y]) for x in xs, y in ys] # v
+    uv = [pdf(d, [x, y]) for x in xs, y in ys] # v
     dst1! = plan_r2r!(uv, RODFT00)
     dst1! * uv # v̂
     factor = collect(1.0:(N - 1)) # n
@@ -303,15 +304,32 @@ savefig("p31.svg")
 ū = spectral(512)
 ū_norm = norm(ū, Inf)
 Ns = 1 .<< (4:8) # 16 to 256
-error = similar(Ns, Float64)
+error_spectral = similar(Ns, Float64)
+error_sparse_fd = similar(error_spectral)
+error_dst1_fd = similar(error_spectral)
 for (i, N) in enumerate(Ns)
+    ds = Int(512 / N) # downsampling
+    ūₙ = @view ū[ds:ds:end, ds:ds:end]
+
     u = spectral(N)
-    d = Int(512 / N) # downsampling
-    u .-= @view ū[d:d:end, d:d:end]
-    error[i] = norm(u, Inf)
+    u .-= ūₙ
+    error_spectral[i] = norm(u, Inf)
+
+    F = setup_rhs(N)
+    u = sparse_solve(N, F)
+    u .-= ūₙ
+    error_sparse_fd[i] = norm(u, Inf)
+
+    u = dst_precondition(N, F)
+    u .-= ūₙ
+    error_dst1_fd[i] = norm(u, Inf)
 end
-error ./= ū_norm
-plot(Ns, error, axis = :log, xlabel = L"N",
-     ylabel = L"||u^{(l)}-\bar u||_\infty/||\bar u||_\infty", markershape = :circle,
-     legend = false)
+error_spectral ./= ū_norm
+plot(Ns, error_spectral, axis = :log, xlabel = L"N", markershape = :circle,
+     legend = :bottomleft, label = "spectral",
+     ylabel = L"||u^{(l)}-\bar u||_\infty/||\bar u||_\infty")
+plot!(Ns, error_sparse_fd, markershape = :square, label = "FD sparse")
+plot!(Ns, error_dst1_fd, markershape = :diamond, label = "FD DST1")
 savefig("p32.svg")
+
+## Problem 3.3
