@@ -73,6 +73,10 @@ jobs:
         with:
           name: p32-plot
           path: p32.svg
+      - uses: actions/upload-artifact@v3
+        with:
+          name: p33-plot
+          path: p33.svg
   comment-plot:
     needs: run-timing
     runs-on: ubuntu-latest
@@ -124,6 +128,9 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: p32-plot
+      - uses: actions/download-artifact@v3
+        with:
+          name: p33-plot
       - name: Add plot to comment
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -150,4 +157,5 @@ jobs:
           echo problem 3 >> report3.md
           cml-publish p31.svg --md >> report3.md
           cml-publish p32.svg --md >> report3.md
+          cml-publish p33.svg --md >> report3.md
           cml-send-comment report3.md
