@@ -160,7 +160,7 @@ u₁ = reshape(u₁, (N - 1, N - 1))
 u₁_crop = copy(u₁)
 u₁_crop[crop] .= 0
 contour(xs, ys, log.(abs2.(u₁_crop)), lim = (0, 1), aspect_ratio = 1, fill = true,
-        title = "Re(u), f = $f₁", yflip = true)
+        title = "log(abs(u)), f = $f₁", yflip = true)
 savefig("p21_1.svg")
 
 f₂ = 298.3e6
@@ -172,7 +172,7 @@ u₂ = reshape(u₂, (N - 1, N - 1))
 u₂_crop = copy(u₂)
 u₂_crop[crop] .= 0
 contour(xs, ys, log.(abs2.(u₂_crop)), lim = (0, 1), aspect_ratio = 1, fill = true,
-        title = "Re(u), f = $f₂", yflip = true)
+        title = "log(abs(u)), f = $f₂", yflip = true)
 savefig("p21_2.svg")
 
 ## Problem 2.2
