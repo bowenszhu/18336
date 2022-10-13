@@ -121,14 +121,15 @@ savefig("p14.svg")
 # 2 Iterative solver for EM scattering off a head
 vars = matread("src/pset2/MRI_DATA.mat")
 ϵᵣₑₗ = vars["e_r"]
-reverse!(ϵᵣₑₗ; dims = 1)
 xs = vec(vars["x"])
 ys = vec(vars["y"])
 ϵᵣₑₗ_real = real(ϵᵣₑₗ)
 ϵᵣₑₗ_imag = imag(ϵᵣₑₗ)
-contour(xs, ys, ϵᵣₑₗ_real, aspect_ratio = 1, lims = (0, 1), title = "Re(ϵᵣₑₗ)")
+contour(xs, ys, ϵᵣₑₗ_real, aspect_ratio = 1, lims = (0, 1), title = "Re(ϵᵣₑₗ)",
+        yflip = true)
 savefig("p20_real.svg")
-contour(xs, ys, ϵᵣₑₗ_imag, aspect_ratio = 1, lims = (0, 1), title = "Im(ϵᵣₑₗ)")
+contour(xs, ys, ϵᵣₑₗ_imag, aspect_ratio = 1, lims = (0, 1), title = "Im(ϵᵣₑₗ)",
+        yflip = true)
 savefig("p20_imag.svg")
 ϵᵣₑₗ_inner = @view ϵᵣₑₗ[(begin + 1):(end - 1), (begin + 1):(end - 1)]
 ϵ = ϵ₀ * ϵᵣₑₗ_inner
@@ -158,10 +159,10 @@ u₁ = reshape(u₁, (N - 1, N - 1))
 u₁_crop = copy(u₁)
 u₁_crop[crop] .= 0
 contour(xs, ys, real(u₁_crop), lim = (0, 1), aspect_ratio = 1, fill = true,
-        title = "Re(u), f = $f₁")
+        title = "Re(u), f = $f₁", yflip = true)
 savefig("p21_1real.svg")
 contour(xs, ys, imag(u₁_crop), lim = (0, 1), aspect_ratio = 1, fill = true,
-        title = "Re(u), f = $f₁")
+        title = "Re(u), f = $f₁", yflip = true)
 savefig("p21_1imag.svg")
 
 f₂ = 298.3e6
@@ -173,10 +174,10 @@ u₂ = reshape(u₂, (N - 1, N - 1))
 u₂_crop = copy(u₂)
 u₂_crop[crop] .= 0
 contour(xs, ys, real(u₂_crop), lim = (0, 1), aspect_ratio = 1, fill = true,
-        title = "Re(u), f = $f₂")
+        title = "Re(u), f = $f₂", yflip = true)
 savefig("p21_2real.svg")
 contour(xs, ys, imag(u₂_crop), lim = (0, 1), aspect_ratio = 1, fill = true,
-        title = "Re(u), f = $f₂")
+        title = "Re(u), f = $f₂", yflip = true)
 savefig("p21_2imag.svg")
 
 ## Problem 2.2
@@ -234,7 +235,7 @@ plot(iteration, error₂, yaxis = :log, xlabel = "iteration",
      legend = false, title = L"f=%$f₂")
 savefig("p22_2.svg")
 
-# Problem 2.3
+## Problem 2.3
 function iterative_solve(N::Integer, v::AbstractMatrix, f::AbstractFloat)
     u = zeros(ComplexF64, N - 1, N - 1)
     dst! = plan_r2r!(u, RODFT00)
@@ -265,3 +266,28 @@ end
 
 # 3 A spectrally accurate free-space direct solver
 ## Problem 3.1
+N = 256
+f = 298.3e6
+ω = 2π * f
+k² = (ω / c₀)^2
+μ = [0.6, 0.7]
+σ² = 0.01^2
+Σ = ScalMat(2, σ²)
+d = MvNormal(μ, Σ)
+h = 1 / N
+xs = range(h, 1 - h, N - 1)
+ys = xs
+uv = [pdf(d, [x, y]) for x in xs, y in ys] # v
+dst1! = plan_r2r!(uv, RODFT00)
+dst1! * uv # v̂
+factor = collect(1.0:(N - 1)) # n
+factor .^= 2 # n²
+factor .*= π^2 # n²π²
+factor = factor .+ factor' # n²π² + m²π²
+@. factor = k² - factor # k² - n²π² - m²π²
+uv ./= factor # û
+dst1! * uv
+uv ./= (2N)^2 # u
+contour(xs, ys, uv, fill = true, aspect_ratio = 1, lims = (0, 1), xlabel = L"x",
+        ylabel = L"y", title = L"f=298.3\:\mathrm{MHz}")
+savefig("p31.svg")
