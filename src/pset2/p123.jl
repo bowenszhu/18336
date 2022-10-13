@@ -266,28 +266,52 @@ end
 
 # 3 A spectrally accurate free-space direct solver
 ## Problem 3.1
-N = 256
 f = 298.3e6
 ω = 2π * f
 k² = (ω / c₀)^2
 μ = [0.6, 0.7]
 σ² = 0.01^2
 Σ = ScalMat(2, σ²)
-d = MvNormal(μ, Σ)
+distribution = MvNormal(μ, Σ)
+function spectral(N::Integer)
+    h = 1 / N
+    xs = range(h, 1 - h, N - 1)
+    ys = xs
+    uv = [pdf(distribution, [x, y]) for x in xs, y in ys] # v
+    dst1! = plan_r2r!(uv, RODFT00)
+    dst1! * uv # v̂
+    factor = collect(1.0:(N - 1)) # n
+    factor .^= 2 # n²
+    factor .*= π^2 # n²π²
+    factor = factor .+ factor' # n²π² + m²π²
+    @. factor = k² - factor # k² - n²π² - m²π²
+    uv ./= factor # û
+    dst1! * uv
+    uv ./= (2N)^2 # u
+    uv
+end
+N = 256
+u = spectral(256)
 h = 1 / N
 xs = range(h, 1 - h, N - 1)
 ys = xs
-uv = [pdf(d, [x, y]) for x in xs, y in ys] # v
-dst1! = plan_r2r!(uv, RODFT00)
-dst1! * uv # v̂
-factor = collect(1.0:(N - 1)) # n
-factor .^= 2 # n²
-factor .*= π^2 # n²π²
-factor = factor .+ factor' # n²π² + m²π²
-@. factor = k² - factor # k² - n²π² - m²π²
-uv ./= factor # û
-dst1! * uv
-uv ./= (2N)^2 # u
-contour(xs, ys, uv, fill = true, aspect_ratio = 1, lims = (0, 1), xlabel = L"x",
+contour(xs, ys, u, fill = true, aspect_ratio = 1, lims = (0, 1), xlabel = L"x",
         ylabel = L"y", title = L"f=298.3\:\mathrm{MHz}")
 savefig("p31.svg")
+
+## Problem 3.2
+ū = spectral(512)
+ū_norm = norm(ū, Inf)
+Ns = 1 .<< (4:8) # 16 to 256
+error = similar(Ns, Float64)
+for (i, N) in enumerate(Ns)
+    u = spectral(N)
+    d = Int(512 / N) # downsampling
+    u .-= @view ū[d:d:end, d:d:end]
+    error[i] = norm(u, Inf)
+end
+error ./= ū_norm
+plot(Ns, error, axis = :log, xlabel = L"N",
+     ylabel = L"||u^{(l)}-\bar u||_\infty/||\bar u||_\infty", markershape = :circle,
+     legend = false)
+savefig("p32.svg")
