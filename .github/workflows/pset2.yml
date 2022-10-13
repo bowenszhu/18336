@@ -39,20 +39,12 @@ jobs:
           path: p20_imag.svg
       - uses: actions/upload-artifact@v3
         with:
-          name: p21_1real-plot
-          path: p21_1real.svg
+          name: p21_1-plot
+          path: p21_1.svg
       - uses: actions/upload-artifact@v3
         with:
-          name: p21_1imag-plot
-          path: p21_1imag.svg
-      - uses: actions/upload-artifact@v3
-        with:
-          name: p21_2real-plot
-          path: p21_2real.svg
-      - uses: actions/upload-artifact@v3
-        with:
-          name: p21_2imag-plot
-          path: p21_2imag.svg
+          name: p21_2-plot
+          path: p21_2.svg
       - uses: actions/upload-artifact@v3
         with:
           name: p22_1-plot
@@ -103,16 +95,10 @@ jobs:
           name: p20_imag-plot
       - uses: actions/download-artifact@v3
         with:
-          name: p21_1real-plot
+          name: p21_1-plot
       - uses: actions/download-artifact@v3
         with:
-          name: p21_1imag-plot
-      - uses: actions/download-artifact@v3
-        with:
-          name: p21_2real-plot
-      - uses: actions/download-artifact@v3
-        with:
-          name: p21_2imag-plot
+          name: p21_2-plot
       - uses: actions/download-artifact@v3
         with:
           name: p22_1-plot
@@ -145,10 +131,8 @@ jobs:
           echo problem 2 >> report2.md
           cml-publish p20_real.svg --md >> report2.md
           cml-publish p20_imag.svg --md >> report2.md
-          cml-publish p21_1real.svg --md >> report2.md
-          cml-publish p21_1imag.svg --md >> report2.md
-          cml-publish p21_2real.svg --md >> report2.md
-          cml-publish p21_2imag.svg --md >> report2.md
+          cml-publish p21_1.svg --md >> report2.md
+          cml-publish p21_2.svg --md >> report2.md
           cml-publish p22_1.svg --md >> report2.md
           cml-publish p22_2.svg --md >> report2.md
           cat p23.txt >> report2.md

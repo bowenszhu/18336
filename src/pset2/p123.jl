@@ -159,12 +159,9 @@ u₁ = ∇²k² \ vec(v)
 u₁ = reshape(u₁, (N - 1, N - 1))
 u₁_crop = copy(u₁)
 u₁_crop[crop] .= 0
-contour(xs, ys, real(u₁_crop), lim = (0, 1), aspect_ratio = 1, fill = true,
+contour(xs, ys, log.(abs2.(u₁_crop)), lim = (0, 1), aspect_ratio = 1, fill = true,
         title = "Re(u), f = $f₁", yflip = true)
-savefig("p21_1real.svg")
-contour(xs, ys, imag(u₁_crop), lim = (0, 1), aspect_ratio = 1, fill = true,
-        title = "Re(u), f = $f₁", yflip = true)
-savefig("p21_1imag.svg")
+savefig("p21_1.svg")
 
 f₂ = 298.3e6
 ω₂ = 2π * f₂
@@ -174,12 +171,9 @@ u₂ = ∇²k² \ vec(v)
 u₂ = reshape(u₂, (N - 1, N - 1))
 u₂_crop = copy(u₂)
 u₂_crop[crop] .= 0
-contour(xs, ys, real(u₂_crop), lim = (0, 1), aspect_ratio = 1, fill = true,
+contour(xs, ys, log.(abs2.(u₂_crop)), lim = (0, 1), aspect_ratio = 1, fill = true,
         title = "Re(u), f = $f₂", yflip = true)
-savefig("p21_2real.svg")
-contour(xs, ys, imag(u₂_crop), lim = (0, 1), aspect_ratio = 1, fill = true,
-        title = "Re(u), f = $f₂", yflip = true)
-savefig("p21_2imag.svg")
+savefig("p21_2.svg")
 
 ## Problem 2.2
 ū₁ = u₁
