@@ -325,6 +325,8 @@ for (i, N) in enumerate(Ns)
     error_dst1_fd[i] = norm(u, Inf)
 end
 error_spectral ./= ū_norm
+error_sparse_fd ./= ū_norm
+error_dst1_fd ./= ū_norm
 plot(Ns, error_spectral, axis = :log, xlabel = L"N", markershape = :circle,
      legend = :bottomleft, label = "spectral",
      ylabel = L"||u^{(l)}-\bar u||_\infty/||\bar u||_\infty")
