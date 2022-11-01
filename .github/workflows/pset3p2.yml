@@ -1,0 +1,35 @@
+name: run-pset3p2
+on: push
+jobs:
+  run-timing:
+    runs-on: ubuntu-latest
+    env:
+      GKSwstype: "100"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: julia-actions/setup-julia@latest
+        with:
+          version: "1.8.2"
+      - uses: julia-actions/julia-buildpkg@v1
+      - name: Run
+        run: julia --project src/pset3/p2.jl
+      - uses: actions/upload-artifact@v3
+        with:
+          name: p22-plot
+          path: p22.svg
+  comment-plot:
+    needs: run-timing
+    runs-on: ubuntu-latest
+    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: p22-plot
+      - name: Add plot to comment
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo problem 2.2 >> report2.md
+          cml asset publish p22.svg --md >> report2.md
+          cml-send-comment report2.md
