@@ -17,6 +17,10 @@ jobs:
         with:
           name: p22-plot
           path: p22.svg
+      - uses: actions/upload-artifact@v3
+        with:
+          name: p23-txt
+          path: p23.txt
   comment-plot:
     needs: run-timing
     runs-on: ubuntu-latest
@@ -26,10 +30,15 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: p22-plot
+      - uses: actions/download-artifact@v3
+        with:
+          name: p23-txt
       - name: Add plot to comment
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo problem 2.2 >> report2.md
           cml asset publish p22.svg --md >> report2.md
+          echo problem 2.3 >> report2.md
+          cat p23.txt >> report2.md
           cml-send-comment report2.md

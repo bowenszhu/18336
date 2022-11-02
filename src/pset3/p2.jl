@@ -51,3 +51,11 @@ plot(norm_v, yaxis = :log10, legend = false, xlabel = L"n",
 savefig("p22.svg")
 
 # Problem 2.3
+∂ₓu₁ = (u[1] - u[2]) / (x[1] - x[2])
+const KG = 6.34e29
+M = 4 / √π * KG * ∂ₓu₁
+Mₒ = 1.99e30
+mass = M / Mₒ
+open("p23.txt", "w") do io
+    write(io, "mass $mass\n")
+end
