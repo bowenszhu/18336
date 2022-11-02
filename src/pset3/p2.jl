@@ -2,6 +2,7 @@ using LinearAlgebra: mul!, Diagonal, norm
 using Plots: plot, savefig
 using LaTeXStrings: @L_str
 
+# Problem 2.2
 const N = 64
 const n = 3
 θ = 0:(1 / (N - 1)):1
@@ -46,5 +47,7 @@ while true
     end
 end
 plot(norm_v, yaxis = :log10, legend = false, xlabel = L"n",
-     ylabel = L"\log_{10}|v^n|_\infty")
+     ylabel = L"|v^n|_\infty")
 savefig("p22.svg")
+
+# Problem 2.3
