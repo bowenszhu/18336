@@ -19,6 +19,10 @@ jobs:
           path: p22.svg
       - uses: actions/upload-artifact@v3
         with:
+          name: p22u-plot
+          path: p22u.svg
+      - uses: actions/upload-artifact@v3
+        with:
           name: p23-txt
           path: p23.txt
   comment-plot:
@@ -32,6 +36,9 @@ jobs:
           name: p22-plot
       - uses: actions/download-artifact@v3
         with:
+          name: p22u-plot
+      - uses: actions/download-artifact@v3
+        with:
           name: p23-txt
       - name: Add plot to comment
         env:
@@ -39,6 +46,7 @@ jobs:
         run: |
           echo problem 2.2 >> report2.md
           cml asset publish p22.svg --md >> report2.md
+          cml asset publish p22u.svg --md >> report2.md
           echo problem 2.3 >> report2.md
           cat p23.txt >> report2.md
           cml-send-comment report2.md

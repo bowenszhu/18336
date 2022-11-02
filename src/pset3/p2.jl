@@ -49,6 +49,8 @@ end
 plot(norm_v, yaxis = :log10, legend = false, xlabel = L"n",
      ylabel = L"|v^n|_\infty")
 savefig("p22.svg")
+plot(x, u, xlabel = L"x", ylabel = L"u", legend = false)
+savefig("p22u.svg")
 
 # Problem 2.3
 ∂ₓu₁ = u[2] / (1.0 - x[2])
