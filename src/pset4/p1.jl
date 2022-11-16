@@ -116,5 +116,5 @@ for j in 1:3000
     @. amplitude[:, j] = abs2(A)
     @. phase[:, j] = atan(real(A), imag(A))
 end
-plot(amplitude, legend = false, title = "amplitude", xlabel = L"x")
-plot(x, phase, legend = false, title = "phase", xlabel = L"x")
+heatmap(log.(amplitude'), title = "amplitude")
+heatmap(phase', title = "phase")
