@@ -15,12 +15,16 @@ jobs:
         run: julia --project src/pset5/p1.jl
       - uses: actions/upload-artifact@v3
         with:
-          name: p1a-plot
-          path: p1a.svg
+          name: p11a-plot
+          path: p11a.svg
       - uses: actions/upload-artifact@v3
         with:
-          name: p1b-plot
-          path: p1b.svg
+          name: p11b-plot
+          path: p11b.svg
+      - uses: actions/upload-artifact@v3
+        with:
+          name: p12a-plot
+          path: p12a.svg
   comment-plot:
     needs: run-timing
     runs-on: ubuntu-latest
@@ -29,15 +33,19 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
         with:
-          name: p1a-plot
+          name: p11a-plot
       - uses: actions/download-artifact@v3
         with:
-          name: p1b-plot
+          name: p11b-plot
+      - uses: actions/download-artifact@v3
+        with:
+          name: p12a-plot
       - name: Add plot to comment
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo problem 1 >> report1.md
-          cml asset publish p1a.svg --md >> report1.md
-          cml asset publish p1b.svg --md >> report1.md
+          cml asset publish p11a.svg --md >> report1.md
+          cml asset publish p11b.svg --md >> report1.md
+          cml asset publish p12a.svg --md >> report1.md
           cml comment create report1.md
