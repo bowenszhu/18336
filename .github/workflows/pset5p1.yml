@@ -17,6 +17,10 @@ jobs:
         with:
           name: p1a-plot
           path: p1a.svg
+      - uses: actions/upload-artifact@v3
+        with:
+          name: p1b-plot
+          path: p1b.svg
   comment-plot:
     needs: run-timing
     runs-on: ubuntu-latest
@@ -26,10 +30,14 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: p1a-plot
+      - uses: actions/download-artifact@v3
+        with:
+          name: p1b-plot
       - name: Add plot to comment
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo problem 1 >> report1.md
           cml asset publish p1a.svg --md >> report1.md
-          cml-send-comment report1.md
+          cml asset publish p1b.svg --md >> report1.md
+          cml comment create report1.md
