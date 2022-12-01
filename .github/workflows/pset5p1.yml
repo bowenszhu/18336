@@ -1,0 +1,35 @@
+name: run-pset5p1
+on: push
+jobs:
+  run-timing:
+    runs-on: ubuntu-latest
+    env:
+      GKSwstype: "100"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: julia-actions/setup-julia@latest
+        with:
+          version: "1.8.3"
+      - uses: julia-actions/julia-buildpkg@v1
+      - name: Run
+        run: julia --project src/pset5/p1.jl
+      - uses: actions/upload-artifact@v3
+        with:
+          name: p1a-plot
+          path: p1a.svg
+  comment-plot:
+    needs: run-timing
+    runs-on: ubuntu-latest
+    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: p1a-plot
+      - name: Add plot to comment
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo problem 1 >> report1.md
+          cml asset publish p1a.svg --md >> report1.md
+          cml-send-comment report1.md
