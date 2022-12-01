@@ -25,6 +25,10 @@ jobs:
         with:
           name: p12a-plot
           path: p12a.svg
+      - uses: actions/upload-artifact@v3
+        with:
+          name: p12b-plot
+          path: p12b.svg
   comment-plot:
     needs: run-timing
     runs-on: ubuntu-latest
@@ -40,6 +44,9 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: p12a-plot
+      - uses: actions/download-artifact@v3
+        with:
+          name: p12b-plot
       - name: Add plot to comment
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -48,4 +55,5 @@ jobs:
           cml asset publish p11a.svg --md >> report1.md
           cml asset publish p11b.svg --md >> report1.md
           cml asset publish p12a.svg --md >> report1.md
+          cml asset publish p12b.svg --md >> report1.md
           cml comment create report1.md

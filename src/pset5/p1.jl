@@ -58,11 +58,11 @@ for (i, N) in enumerate(Ns)
     @. G = 1.0 / G
     vals = svdvals(G)
     ϵsnorm = ϵ * vals[1]
-    for (c, val) in enumerate(vals)
+    for val in vals
         if val < ϵsnorm
-            ranks[i] = c - 1
             break
         end
+        ranks[i] += 1
     end
 end
 plot(Ns, ranks, legend = false, xlabel = "number of sources/targets",
@@ -91,12 +91,42 @@ for (i, ξ) in enumerate(ξs)
     end
     vals = svdvals(G)
     ϵsnorm = ϵ * vals[1]
-    for (c, val) in enumerate(vals)
+    for val in vals
         if val < ϵsnorm
-            ranks[i] = c - 1
             break
         end
+        ranks[i] += 1
     end
 end
 plot(ξs, ranks, xaxis = :log, legend = false, xlabel = L"ξ", ylabel = "relative rank")
 savefig("p12a.svg")
+
+### (b)
+ξ = 6.0
+N = M = 20
+ks = 0:100
+ranks = zeros(Int, length(ks))
+Y = rand(3, M)
+X = rand(3, N)
+X[:, 1] .+= ξ
+G = Matrix{ComplexF64}(undef, M, N)
+for (i, k) in enumerate(ks)
+    for n in 1:N
+        x = @view X[:, n]
+        for m in 1:M
+            y = @view Y[:, m]
+            temp = norm(y - x)
+            G[m, n] = cis(k * temp) / temp
+        end
+    end
+    vals = svdvals(G)
+    ϵsnorm = ϵ * vals[1]
+    for val in vals
+        if val < ϵsnorm
+            break
+        end
+        ranks[i] += 1
+    end
+end
+plot(ks, ranks, legend = false, xlabel = L"k", ylabel = "relative rank")
+savefig("p12b.svg")
