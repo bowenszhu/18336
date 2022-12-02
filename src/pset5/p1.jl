@@ -80,7 +80,7 @@ X1 = rand(N)
 X = rand(3, N)
 G = Matrix{ComplexF64}(undef, M, N)
 for (i, ξ) in enumerate(ξs)
-    @. X[1, :] = X1 + ξs[10]
+    @. X[1, :] = X1 + ξ
     for n in 1:N
         x = @view X[:, n]
         for m in 1:M
