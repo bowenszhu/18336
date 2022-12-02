@@ -108,7 +108,7 @@ ks = 0:100
 ranks = zeros(Int, length(ks))
 Y = rand(3, M)
 X = rand(3, N)
-X[:, 1] .+= ξ
+X[1, :] .+= ξ
 G = Matrix{ComplexF64}(undef, M, N)
 for (i, k) in enumerate(ks)
     for n in 1:N
